@@ -1,0 +1,195 @@
+// src/components/LinkForm.tsx
+import { useState, useRef, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { encodeUrl, isValidDarazUrl } from '../utils/encode'
+import { toast } from 'react-hot-toast'
+
+const spring = {
+  type: "spring",
+  damping: 25,
+  stiffness: 300
+}
+
+const LinkForm = ({ onSuccess }: { onSuccess: (shortUrl: string) => void }) => {
+  const [url, setUrl] = useState('')
+  const [isValid, setIsValid] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    setIsValid(isValidDarazUrl(url))
+  }, [url])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!isValid) return
+    
+    setIsLoading(true)
+    
+    try {
+      const encoded = encodeUrl(url)
+      const shortUrl = `${window.location.origin}/r/${encoded}`
+      
+      await new Promise(resolve => setTimeout(resolve, 800)) // Simulate processing
+      onSuccess(shortUrl)
+      
+      await navigator.clipboard.writeText(shortUrl)
+      toast.success('Copied to clipboard!', {
+        position: 'bottom-center',
+        style: {
+          background: '#5A31F4',
+          color: '#fff',
+          boxShadow: '0 10px 25px -5px rgba(90, 49, 244, 0.3)'
+        },
+        iconTheme: {
+          primary: '#fff',
+          secondary: '#5A31F4'
+        }
+      })
+    } catch (error) {
+      toast.error('Failed to generate link', {
+        position: 'bottom-center',
+        style: {
+          background: '#EF4444',
+          color: '#fff'
+        }
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handlePaste = async () => {
+    try {
+      const text = await navigator.clipboard.readText()
+      if (text) {
+        setUrl(text)
+        inputRef.current?.focus()
+        
+        // Animation feedback
+        toast('Pasted from clipboard!', {
+          position: 'bottom-center',
+          icon: '📋',
+          style: {
+            background: '#ECFDF5',
+            color: '#065F46'
+          }
+        })
+      }
+    } catch (error) {
+      console.log('Clipboard access denied')
+    }
+  }
+
+  return (
+    <div className="w-full max-w-md">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="relative">
+          <motion.div
+            animate={{
+              boxShadow: isValid 
+                ? '0 0 0 3px rgba(74, 222, 128, 0.5)'
+                : url && !isValid 
+                ? '0 0 0 3px rgba(239, 68, 68, 0.5)'
+                : '0 0 0 3px transparent'
+            }}
+            transition={spring}
+            className="rounded-lg"
+          >
+            <input
+              ref={inputRef}
+              type="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="Paste Daraz product link here"
+              className="w-full px-5 py-4 rounded-lg border-0 bg-white/90 backdrop-blur-sm text-gray-800 shadow-lg focus:ring-4 focus:ring-purple-300/50 transition-all duration-300"
+              required
+            />
+          </motion.div>
+          
+          <AnimatePresence>
+            {!url && (
+              <motion.button
+                type="button"
+                onClick={handlePaste}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 px-3 py-1 bg-purple-100 text-purple-600 rounded-md text-sm font-medium shadow-sm"
+              >
+                Paste
+              </motion.button>
+            )}
+          </AnimatePresence>
+        </div>
+        
+        <AnimatePresence>
+          {url && !isValid && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={spring}
+              className="overflow-hidden"
+            >
+              <div className="flex items-start p-3 bg-red-50 rounded-lg">
+                <svg className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="ml-2 text-sm text-red-600">Please enter a valid Daraz product URL (e.g. https://www.daraz.pk/products/...)</p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
+        <motion.button
+          type="submit"
+          disabled={!isValid || isLoading}
+          whileHover={!isLoading ? { scale: 1.02, boxShadow: '0 10px 25px -5px rgba(90, 49, 244, 0.3)' } : {}}
+          whileTap={!isLoading ? { scale: 0.98 } : {}}
+          className={`w-full px-6 py-4 rounded-xl font-bold text-white transition-all relative overflow-hidden ${
+            isValid 
+              ? 'bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-700 hover:to-purple-500' 
+              : 'bg-gray-300 cursor-not-allowed'
+          }`}
+        >
+          {isLoading && (
+            <motion.span
+              initial={{ left: '-100%' }}
+              animate={{ left: '100%' }}
+              transition={{
+                repeat: Infinity,
+                duration: 1.5,
+                ease: "easeInOut"
+              }}
+              className="absolute top-0 h-full w-1/2 bg-white/20 skew-x-[-20deg]"
+            />
+          )}
+          
+          <span className="relative flex items-center justify-center">
+            {isLoading ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Generating Magic Link...
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                Create Premium Link
+              </>
+            )}
+          </span>
+        </motion.button>
+      </form>
+    </div>
+  )
+}
+
+export default LinkForm

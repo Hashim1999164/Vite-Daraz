@@ -1,0 +1,34 @@
+// src/pages/Redirect.tsx
+import { useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { decodeUrl, isValidDarazUrl } from '../utils/encode'
+import PreviewCard from '../components/PreviewCard'
+
+export default function Redirect() {
+  const { encodedUrl } = useParams<{ encodedUrl: string }>()
+  const navigate = useNavigate()
+  
+  useEffect(() => {
+    if (!encodedUrl) {
+      navigate('/error')
+      return
+    }
+    
+    try {
+      const originalUrl = decodeUrl(encodedUrl)
+      if (!isValidDarazUrl(originalUrl)) {
+        navigate('/error')
+      }
+    } catch (error) {
+      navigate('/error')
+    }
+  }, [encodedUrl, navigate])
+  
+  if (!encodedUrl) return null
+  
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+      <PreviewCard encodedUrl={encodedUrl} />
+    </div>
+  )
+}
