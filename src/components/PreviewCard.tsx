@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { decodeUrl } from '../utils/encode';
 import { detectPlatform, isSafariOnIOS } from '../utils/detectPlatform';
 import { useNavigate } from 'react-router-dom';
@@ -13,38 +13,70 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [androidMsgIndex, setAndroidMsgIndex] = useState(0);
+
   const platform = detectPlatform();
   const navigate = useNavigate();
-
   const originalUrl = decodeUrl(encodedUrl);
 
   useEffect(() => {
-    const fetchOGData = async () => {
+    const fetchOG = async () => {
       try {
-        await new Promise(resolve => setTimeout(resolve, 1200)); // Simulated API call
-        setOgData({
-          title: 'Premium Wireless Headphones (2024 Edition)',
-          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=60',
-          description: 'Experience crystal clear sound with our premium wireless headphones. 40hr battery life, active noise cancellation.',
-          price: 'Rs. 12,999',
-        });
+        const response = await fetch(`/api/fetch-og?url=${encodeURIComponent(originalUrl)}`);
+        const data = await response.json();
+        setOgData(data);
       } catch {
-        setError('Failed to load product details');
-      } finally {
         setLoading(false);
+      } finally {
+        
       }
     };
-    fetchOGData();
+
+    fetchOG();
   }, [originalUrl]);
+
+  useEffect(() => {
+    if (platform === 'android') {
+      const interval = setInterval(() => {
+        setAndroidMsgIndex(prev => (prev + 1) % 2);
+      }, 2000);
+      return () => clearInterval(interval);
+    }
+  }, [platform]);
 
   return (
     <motion.div 
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-      className="w-full max-w-md bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-gray-100"
+      className="relative w-full max-w-md bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-gray-100"
     >
-      <div className="p-6">
+      {/* Android Top Message */}
+      {platform === 'android' && (
+        <motion.div
+          className="absolute top-0 left-0 right-0 px-4 py-3 bg-yellow-100 border-b border-yellow-300 text-yellow-900 text-center font-semibold text-sm z-10"
+          initial={{ y: -50 }}
+          animate={{ y: 0 }}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={androidMsgIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              {androidMsgIndex === 0
+                ? '📲 Tap ⋮ in the top-right corner'
+                : 'Then tap "Open in browser" to continue'}
+            </motion.div>
+          </AnimatePresence>
+          <div className="absolute right-3 top-1.5 text-xl">⋮</div>
+          <div className="absolute right-5 top-5 w-4 h-4 transform rotate-45 border-t-2 border-r-2 border-yellow-700" />
+        </motion.div>
+      )}
+
+      <div className={`p-6 ${platform === 'android' ? 'pt-20' : ''}`}>
         {loading ? (
           <div className="py-10 text-center">
             <motion.div
@@ -96,33 +128,27 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
               </p>
             </div>
 
-            {/* Platform-specific instructions */}
-            {platform === 'ios' && isSafariOnIOS() ? (
-              <div className="mt-6 text-center">
-                <p className="text-sm text-gray-700 font-medium">
-                  👉 Press & Hold the link below
+            {/* iOS Safari */}
+            {platform === 'ios' && isSafariOnIOS() && (
+              <div className="mt-10 text-center">
+                <p className="text-sm text-gray-700 font-medium mb-2">
+                  👉 Press & Hold the button below
                 </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Then choose "Open in Safari" to escape TikTok browser.
+                <p className="text-xs text-gray-500 mb-4">
+                  Then select "Open in Safari" to continue
                 </p>
                 <a
                   href={originalUrl}
-                  className="mt-4 inline-block w-full text-center px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-400 text-white font-semibold rounded-xl shadow hover:shadow-lg transition-all"
+                  className="inline-block px-8 py-4 bg-purple-600 text-white font-bold rounded-xl shadow-lg hover:bg-purple-700 transition"
                   rel="noopener noreferrer"
                 >
-                  {ogData?.title || 'Open Product'}
+                  Open in Safari
                 </a>
               </div>
-            ) : platform === 'android' ? (
-              <div className="mt-6 text-center px-4">
-                <p className="text-sm text-gray-700 font-medium">
-                  📲 Tap <strong>⋮</strong> in the top-right corner
-                </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Then choose <strong>"Open in browser"</strong> to continue.
-                </p>
-              </div>
-            ) : (
+            )}
+
+            {/* Fallback / Desktop */}
+            {(platform !== 'android' && !(platform === 'ios' && isSafariOnIOS())) && (
               <div className="mt-6">
                 <button
                   onClick={() => window.location.href = originalUrl}
