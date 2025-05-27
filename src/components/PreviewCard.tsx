@@ -14,43 +14,51 @@ const isTikTokBrowser = (): boolean => {
     'musically',             // Legacy name
     'trill',                 // Short name from package
     'ss.android.ugc',        // Android package part
-    'zhiliaoapp'             // Chinese name
+    'zhiliaoapp',            // Chinese name
+    'aweme'                  // TikTok's internal name
   ];
 
-  // Check for Android WebView (TikTok's custom WebView)
-  const isAndroidWebView = (
-    ua.includes('linux') &&  // Android base
-    ua.includes('mobile') && // Mobile device
-    ua.includes('applewebkit') && // WebKit browser
-    !ua.includes('chrome') && // Not Chrome
-    !ua.includes('firefox') && // Not Firefox
-    !ua.includes('samsung') // Not Samsung browser
+  // iOS-specific detection
+  const isIOS = /iphone|ipad|ipod/i.test(ua);
+  const isTikTokIOS = isIOS && (
+    ua.includes('tiktok') || 
+    ua.includes('musically') ||
+    /(applewebkit).*(mobile\/\w{5,6})/i.test(ua) // iOS WebKit pattern
   );
 
-  // Check if any pattern matches or it's Android WebView
-  if (tiktokPatterns.some(pattern => ua.includes(pattern)) || isAndroidWebView) {
-    return true;
-  }
+  // Android-specific detection
+  const isAndroid = /android/i.test(ua);
+  const isTikTokAndroid = isAndroid && (
+    tiktokPatterns.some(p => ua.includes(p)) ||
+    // TikTok Android WebView has these characteristics:
+    (ua.includes('linux') &&
+     ua.includes('mobile') &&
+     ua.includes('applewebkit') &&
+     !ua.includes('chrome') &&
+     !ua.includes('firefox') &&
+     !ua.includes('samsung'))
+  );
 
-  // Check for referrer in iframes
+  // Check for TikTok's injected objects
+  const hasTikTokObjects = (
+    (window as any).__tiktok !== undefined ||
+    (navigator as any).tiktok !== undefined
+  );
+
+  // Check if in TikTok iframe
+  let isTikTokIframe = false;
   try {
     if (window.self !== window.top) {
       const frameUrl = (document.referrer || '').toLowerCase();
-      if (frameUrl.includes('tiktok.com') || frameUrl.includes('tiktokcdn.com')) {
-        return true;
-      }
+      isTikTokIframe = frameUrl.includes('tiktok.com') || 
+                       frameUrl.includes('tiktokcdn.com');
     }
   } catch (e) {
     // Cross-origin iframe - likely TikTok
-    return true;
+    isTikTokIframe = true;
   }
 
-  // Additional check for TikTok's injected objects
-  if ((window as any).__tiktok !== undefined || (navigator as any).tiktok !== undefined) {
-    return true;
-  }
-
-  return false;
+  return isTikTokIOS || isTikTokAndroid || hasTikTokObjects || isTikTokIframe;
 };
 
 const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
