@@ -4,40 +4,49 @@ import { decodeUrl } from '../utils/encode';
 import { detectPlatform, isSafariOnIOS } from '../utils/detectPlatform';
 import { useNavigate } from 'react-router-dom';
 
-// Util to detect TikTok in-app browser
 const isTikTokBrowser = (): boolean => {
-  // Safely get userAgent with fallbacks
+  // Get user agent safely
   const ua = (navigator.userAgent || navigator.vendor || '').toLowerCase();
 
-  // Main TikTok app detection patterns
+  // Common TikTok detection patterns
   const tiktokPatterns = [
-    'tiktok',
-    'com.ss.android.ugc.trill',  // Android package name
-    'com.zhiliaoapp.musically', // Older package name
-    'musically'                 // Legacy name
+    'tiktok',                // Standard identifier
+    'musically',             // Legacy name
+    'trill',                 // Short name from package
+    'ss.android.ugc',        // Android package part
+    'zhiliaoapp'             // Chinese name
   ];
 
-  // Check if any TikTok pattern matches
-  if (tiktokPatterns.some(pattern => ua.includes(pattern))) {
+  // Check for Android WebView (TikTok's custom WebView)
+  const isAndroidWebView = (
+    ua.includes('linux') &&  // Android base
+    ua.includes('mobile') && // Mobile device
+    ua.includes('applewebkit') && // WebKit browser
+    !ua.includes('chrome') && // Not Chrome
+    !ua.includes('firefox') && // Not Firefox
+    !ua.includes('samsung') // Not Samsung browser
+  );
+
+  // Check if any pattern matches or it's Android WebView
+  if (tiktokPatterns.some(pattern => ua.includes(pattern)) || isAndroidWebView) {
     return true;
   }
 
-  // iOS-specific webview detection
-  if (/iphone|ipad|ipod.*(tiktok|musically)/i.test(ua)) {
-    return true;
-  }
-
-  // Check if in TikTok iframe
+  // Check for referrer in iframes
   try {
     if (window.self !== window.top) {
-      // Try to get referrer if parent location is inaccessible
       const frameUrl = (document.referrer || '').toLowerCase();
       if (frameUrl.includes('tiktok.com') || frameUrl.includes('tiktokcdn.com')) {
         return true;
       }
     }
   } catch (e) {
-    // If we can't access parent due to cross-origin, assume TikTok
+    // Cross-origin iframe - likely TikTok
+    return true;
+  }
+
+  // Additional check for TikTok's injected objects
+  if ((window as any).__tiktok !== undefined || (navigator as any).tiktok !== undefined) {
     return true;
   }
 
