@@ -67,7 +67,7 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
       // Delay to allow React to mount cleanly
       setTimeout(() => {
         window.location.href = originalUrl;
-      }, 500);
+      }, 5000);
       return;
     }
 
