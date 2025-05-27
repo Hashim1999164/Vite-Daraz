@@ -53,7 +53,7 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
     fetchOG();
   }, [originalUrl, isTikTok]);
 
-  function RedirectToDaraz({ originalUrl }) {
+  function RedirectToDaraz({ originalUrl }: { originalUrl: string }) {
     useEffect(() => {
       if (originalUrl) {
         window.location.href = originalUrl;
