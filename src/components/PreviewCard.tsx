@@ -43,7 +43,7 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
         const data = await response.json();
         setOgData(data);
       } catch {
-        setError('Failed to fetch preview data.');
+        setLoading(false);
       } finally {
         setLoading(false);
       }
