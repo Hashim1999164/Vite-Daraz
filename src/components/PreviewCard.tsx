@@ -179,20 +179,27 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
 
             {/* iOS Safari */}
             {platform === 'ios' && (
-              <div className="mt-10 text-center">
-                <p className="text-sm text-gray-700 font-medium mb-2">
+              <div className="mt-10 text-center flex flex-col items-center">
+                <p className="text-lg font-semibold text-gray-800 mb-2 animate-pulse">
                   👉 Press & Hold the button below
                 </p>
-                <p className="text-xs text-gray-500 mb-4">
+                <p className="text-sm text-gray-500 mb-6">
                   Then select "Open in Safari" to continue
                 </p>
-                <a
-                  href={originalUrl}
-                  className="inline-block px-8 py-4 bg-purple-600 text-white font-bold rounded-xl shadow-lg hover:bg-purple-700 transition"
-                  rel="noopener noreferrer"
-                >
-                  Open in Safari
-                </a>
+
+                <div className="relative w-32 h-32">
+                  {/* Circular Progress Animation */}
+                  <div className="absolute inset-0 rounded-full border-4 border-purple-300 animate-hold-progress" />
+
+                  {/* Hold Button */}
+                  <a
+                    href={originalUrl}
+                    className="w-32 h-32 rounded-full bg-purple-600 text-white font-bold flex items-center justify-center shadow-lg text-center relative z-10 animate-glow"
+                    rel="noopener noreferrer"
+                  >
+                    Hold to open
+                  </a>
+                </div>
               </div>
             )}
 

@@ -1,3 +1,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes holdProgress {
+    0% {
+      transform: rotate(90deg);
+      stroke-dashoffset: 440;
+    }
+    100% {
+      transform: rotate(450deg);
+      stroke-dashoffset: 0;
+    }
+  }
+  
+  @keyframes glow {
+    0%, 100% {
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.8),
+                   0 0 16px rgba(168, 85, 247, 0.6),
+                   0 0 24px rgba(168, 85, 247, 0.4);
+    }
+    50% {
+      text-shadow: 0 0 12px rgba(255, 255, 255, 1),
+                   0 0 24px rgba(168, 85, 247, 1),
+                   0 0 36px rgba(168, 85, 247, 0.7);
+    }
+  }
+  
+  .animate-hold-progress {
+    animation: holdProgress 1s linear forwards;
+    border-color: transparent transparent transparent #a855f7;
+    border-style: solid;
+    border-width: 4px;
+    border-radius: 9999px;
+    box-sizing: border-box;
+  }
+  
+  .animate-glow {
+    animation: glow 1.5s infinite;
+  }
+  
