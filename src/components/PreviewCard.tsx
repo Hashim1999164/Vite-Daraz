@@ -5,9 +5,43 @@ import { detectPlatform, isSafariOnIOS } from '../utils/detectPlatform';
 import { useNavigate } from 'react-router-dom';
 
 // Util to detect TikTok in-app browser
-const isTikTokBrowser = () => {
-  const ua = navigator.userAgent || navigator.vendor;
-  return ua.toLowerCase().includes('tiktok');
+const isTikTokBrowser = (): boolean => {
+  // Safely get userAgent with fallbacks
+  const ua = (navigator.userAgent || navigator.vendor || '').toLowerCase();
+
+  // Main TikTok app detection patterns
+  const tiktokPatterns = [
+    'tiktok',
+    'com.ss.android.ugc.trill',  // Android package name
+    'com.zhiliaoapp.musically', // Older package name
+    'musically'                 // Legacy name
+  ];
+
+  // Check if any TikTok pattern matches
+  if (tiktokPatterns.some(pattern => ua.includes(pattern))) {
+    return true;
+  }
+
+  // iOS-specific webview detection
+  if (/iphone|ipad|ipod.*(tiktok|musically)/i.test(ua)) {
+    return true;
+  }
+
+  // Check if in TikTok iframe
+  try {
+    if (window.self !== window.top) {
+      // Try to get referrer if parent location is inaccessible
+      const frameUrl = (document.referrer || '').toLowerCase();
+      if (frameUrl.includes('tiktok.com') || frameUrl.includes('tiktokcdn.com')) {
+        return true;
+      }
+    }
+  } catch (e) {
+    // If we can't access parent due to cross-origin, assume TikTok
+    return true;
+  }
+
+  return false;
 };
 
 const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
@@ -25,7 +59,7 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
   const navigate = useNavigate();
   const originalUrl = decodeUrl(encodedUrl);
 
-  const isTikTok = true //isTikTokBrowser();
+  const isTikTok = isTikTokBrowser();
 
   useEffect(() => {
     // If NOT TikTok browser, force external open
@@ -97,7 +131,7 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-xl font-bold text-gray-900"
+                className="text-lg font-bold text-gray-900"
               >
                 {androidMsgIndex === 0
                   ? 'Tap the menu in the top-right corner'
