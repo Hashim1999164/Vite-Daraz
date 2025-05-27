@@ -97,7 +97,7 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-2xl font-bold text-gray-900"
+                className="text-xl font-bold text-gray-900"
               >
                 {androidMsgIndex === 0
                   ? 'Tap the menu in the top-right corner'
