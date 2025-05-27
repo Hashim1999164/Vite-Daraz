@@ -10,6 +10,7 @@ const isTikTokBrowser = () => {
   return ua.toLowerCase().includes('tiktok');
 };
 
+
 const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
   const [ogData, setOgData] = useState<{
     title?: string;
@@ -51,6 +52,20 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
 
     fetchOG();
   }, [originalUrl, isTikTok]);
+
+  function RedirectToDaraz({ originalUrl }) {
+    useEffect(() => {
+      if (originalUrl) {
+        window.location.href = originalUrl;
+      }
+    }, [originalUrl]);
+  
+    return (
+      <div className="mt-6">
+        <p className="text-center text-gray-500">Redirecting you to Daraz...</p>
+      </div>
+    );
+  }
 
   useEffect(() => {
     if (platform === 'android' && isTikTok) {
@@ -182,14 +197,9 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
             )}
 
             {/* Fallback / Desktop */}
-            {(platform !== 'android' && !(platform === 'ios' && isSafariOnIOS())) && (
+            {(platform !== 'android' && !(platform === 'ios')) && (
               <div className="mt-6">
-                <button
-                  onClick={() => window.location.href = originalUrl}
-                  className="w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-purple-400 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all"
-                >
-                  Open in Daraz
-                </button>
+                <RedirectToDaraz originalUrl={originalUrl} />
               </div>
             )}
           </>
