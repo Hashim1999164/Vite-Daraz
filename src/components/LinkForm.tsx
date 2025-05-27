@@ -68,6 +68,20 @@ const LinkForm = ({ onSuccess }: { onSuccess: (shortUrl: string) => void }) => {
 
   return (
     <div className="w-full max-w-md">
+      {/* Google AdSense Horizontal Banner */}
+      <div className="w-full mb-6 overflow-hidden rounded-lg">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3754737230953398"
+          crossOrigin="anonymous"></script>
+        <ins className="adsbygoogle"
+          style={{ display: 'block', width: '100%', height: '90px' }}
+          data-ad-client="ca-pub-3754737230953398"
+          data-ad-slot="YOUR_AD_SLOT_ID"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="relative">
           <motion.div
