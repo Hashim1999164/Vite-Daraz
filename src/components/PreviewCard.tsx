@@ -179,29 +179,30 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
 
             {/* iOS Safari */}
             {platform === 'ios' && (
-              <div className="mt-10 text-center flex flex-col items-center">
-                <p className="text-lg font-semibold text-gray-800 mb-2 animate-pulse">
-                  👉 Press & Hold the button below
-                </p>
-                <p className="text-sm text-gray-500 mb-6">
-                  Then select "Open in Safari" to continue
-                </p>
+            <div className="mt-10 text-center flex flex-col items-center">
+              <p className="text-xl font-bold text-gray-800 mb-2">
+                👉 Press & Hold the button below
+              </p>
+              <p className="text-sm text-gray-500 mb-6">
+                Then select "Open Link" to continue
+              </p>
 
-                <div className="relative w-32 h-32">
-                  {/* Circular Progress Animation */}
-                  <div className="absolute inset-0 rounded-full border-4 border-purple-300 animate-hold-progress" />
+              <div className="relative w-32 h-32">
+                {/* Animated progress border */}
+                <div className="absolute inset-0 rounded-full border-4 border-purple-500 animate-hold-progress z-0" />
 
-                  {/* Hold Button */}
-                  <a
-                    href={originalUrl}
-                    className="w-32 h-32 rounded-full bg-purple-600 text-white font-bold flex items-center justify-center shadow-lg text-center relative z-10 animate-glow"
-                    rel="noopener noreferrer"
-                  >
-                    Hold to open
-                  </a>
-                </div>
+                {/* Button */}
+                <a
+                  href={originalUrl}
+                  className="w-32 h-32 flex items-center justify-center rounded-full bg-white border-4 border-purple-500 text-purple-600 text-lg font-extrabold animate-breathe relative z-10"
+                  rel="noopener noreferrer"
+                >
+                  Hold to open
+                </a>
               </div>
-            )}
+            </div>
+          )}
+
 
             {/* Fallback / Desktop */}
             {(platform !== 'android' && !(platform === 'ios')) && (

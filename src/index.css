@@ -5,37 +5,36 @@
 @keyframes holdProgress {
     0% {
       transform: rotate(90deg);
-      stroke-dashoffset: 440;
+      border-color: transparent transparent transparent #a855f7;
     }
     100% {
       transform: rotate(450deg);
-      stroke-dashoffset: 0;
+      border-color: transparent transparent transparent #a855f7;
     }
   }
   
-  @keyframes glow {
+  @keyframes breathe {
     0%, 100% {
-      text-shadow: 0 0 8px rgba(255, 255, 255, 0.8),
-                   0 0 16px rgba(168, 85, 247, 0.6),
-                   0 0 24px rgba(168, 85, 247, 0.4);
+      transform: scale(1);
     }
     50% {
-      text-shadow: 0 0 12px rgba(255, 255, 255, 1),
-                   0 0 24px rgba(168, 85, 247, 1),
-                   0 0 36px rgba(168, 85, 247, 0.7);
+      transform: scale(1.08);
     }
   }
   
   .animate-hold-progress {
     animation: holdProgress 1s linear forwards;
-    border-color: transparent transparent transparent #a855f7;
+    border-top-color: #a855f7;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    border-width: 6px;
     border-style: solid;
-    border-width: 4px;
     border-radius: 9999px;
-    box-sizing: border-box;
+    transform-origin: center;
   }
   
-  .animate-glow {
-    animation: glow 1.5s infinite;
+  .animate-breathe {
+    animation: breathe 2s ease-in-out infinite;
   }
   
