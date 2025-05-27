@@ -56,21 +56,13 @@ const isTikTokBrowser = (): boolean => {
 
   // 4. iOS-specific detection
   else if (isIOS) {
-    // TikTok's iOS WebView has these characteristics:
+    // iOS WebView with TikTok characteristics
     const isTikTokWebView = (
-      ua.includes('mobile/15e148') || // Specific WebKit version
-      (ua.includes('applewebkit') && !ua.includes('safari/'))
+      ua.includes('mobile/15e148') || // iOS WebKit
+      (ua.includes('applewebkit') && !ua.includes('version/')) // No version
     );
 
-    if (isTikTokWebView) {
-      try {
-        if (window.screen.width === 0 && window.screen.height === 0) {
-          return true;
-        }
-      } catch (e) {
-        return true; // API restrictions indicate TikTok
-      }
-    }
+    return isTikTokWebView;
   }
 
   // 5. Iframe/referrer check (last resort)
