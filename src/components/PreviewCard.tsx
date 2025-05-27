@@ -54,10 +54,10 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
       {/* Android Top Message */}
       {platform === 'android' && (
         <motion.div
-          className="absolute top-0 left-0 right-0 px-4 py-3 bg-yellow-100 border-b border-yellow-300 text-yellow-900 text-center font-semibold text-sm z-10"
-          initial={{ y: -50 }}
-          animate={{ y: 0 }}
-        >
+        className="absolute top-0 left-1/2 transform -translate-x-1/2 px-4 py-3 bg-yellow-100 border border-yellow-300 rounded-b-xl text-yellow-900 text-center font-semibold text-sm z-20 w-fit max-w-[90%] shadow-md"
+        initial={{ y: -50 }}
+        animate={{ y: 0 }}
+      >
           <AnimatePresence mode="wait">
             <motion.div
               key={androidMsgIndex}
@@ -71,8 +71,11 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
                 : 'Then tap "Open in browser" to continue'}
             </motion.div>
           </AnimatePresence>
-          <div className="absolute right-3 top-1.5 text-xl">⋮</div>
-          <div className="absolute right-5 top-5 w-4 h-4 transform rotate-45 border-t-2 border-r-2 border-yellow-700" />
+          <div className="absolute top-2 right-2 flex flex-col items-center z-30">
+          <div className="text-xl">⋮</div>
+          <div className="w-3 h-3 mt-1 rotate-45 border-t-2 border-r-2 border-yellow-700" />
+        </div>
+
         </motion.div>
       )}
 
@@ -129,7 +132,7 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
             </div>
 
             {/* iOS Safari */}
-            {platform === 'ios' && isSafariOnIOS() && (
+            {platform === 'ios' && (
               <div className="mt-10 text-center">
                 <p className="text-sm text-gray-700 font-medium mb-2">
                   👉 Press & Hold the button below
