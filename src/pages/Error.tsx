@@ -1,19 +1,18 @@
-// src/pages/Error.tsx
-import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
-export default function Error() {
-  const navigate = useNavigate()
+const Error = () => {
+  const navigate = useNavigate();
   
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-purple-50 to-blue-50">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         className="text-center max-w-md"
       >
         <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="h-10 w-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
@@ -23,13 +22,17 @@ export default function Error() {
           The link you're trying to access is invalid or expired. Please check the link or create a new one.
         </p>
         
-        <button
+        <motion.button
           onClick={() => navigate('/')}
-          className="px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-400 text-white font-medium rounded-lg hover:from-purple-700 hover:to-purple-500 transition-all"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-400 text-white font-medium rounded-lg shadow-md"
         >
           Create New Link
-        </button>
+        </motion.button>
       </motion.div>
     </div>
-  )
-}
+  );
+};
+
+export default Error;

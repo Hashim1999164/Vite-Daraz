@@ -1,22 +1,27 @@
-// src/utils/detectPlatform.ts
-export type Platform = 'ios' | 'android' | 'desktop' | 'unknown'
+export type Platform = 'ios' | 'android' | 'desktop';
 
 export const detectPlatform = (): Platform => {
-  const userAgent = navigator.userAgent || navigator.vendor
+  const ua = navigator.userAgent;
   
-  if (/android/i.test(userAgent)) {
-    return 'android'
+  // iOS detection
+  if (/iPad|iPhone|iPod/i.test(ua)) {
+    return 'ios';
   }
   
-  if (/iPad|iPhone|iPod/i.test(userAgent)) {
-    return 'ios'
+  // Android detection
+  if (/Android/i.test(ua)) {
+    return 'android';
   }
   
-  if (/Macintosh|Windows|Linux/.test(userAgent)) {
-    return 'desktop'
-  }
-  
-  return 'unknown'
-}
+  return 'desktop';
+};
+
+// Special detection for Safari on iOS
+export const isSafariOnIOS = (): boolean => {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && 
+         /AppleWebKit/i.test(navigator.userAgent) &&
+         !/CriOS|FxiOS|OPiOS|mercury|EdgiOS/i.test(navigator.userAgent);
+};
 
 export default detectPlatform
+isSafariOnIOS

@@ -1,9 +1,8 @@
-// src/App.tsx
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import Redirect from './pages/Redirect'
-import Error from './pages/Error'
-import { Toaster } from 'react-hot-toast'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Redirect from './pages/Redirect';
+import Error from './pages/Error';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
@@ -21,7 +20,7 @@ function App() {
         position="bottom-center"
         toastOptions={{
           style: {
-            background: 'rgba(255, 255, 255, 0.9)',
+            background: 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(10px)',
             border: '1px solid rgba(0, 0, 0, 0.1)',
             boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
@@ -31,7 +30,7 @@ function App() {
         }}
       />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,13 +1,12 @@
-// src/pages/Home.tsx
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import LinkForm from '../components/LinkForm'
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import LinkForm from '../components/LinkForm';
 
 const Home = () => {
-  const [shortUrl, setShortUrl] = useState('')
+  const [shortUrl, setShortUrl] = useState('');
   
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-purple-50 to-blue-50">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -43,7 +42,7 @@ const Home = () => {
           transition={{ delay: 0.2 }}
           className="text-lg text-gray-600 max-w-lg mx-auto"
         >
-          Transform long Daraz links into beautiful, app-opening short URLs
+          Create beautiful short links that open directly in the Daraz app
         </motion.p>
       </motion.div>
       
@@ -128,7 +127,7 @@ const Home = () => {
         © {new Date().getFullYear()} Daraz Link Wizard. Not affiliated with Daraz.
       </motion.footer>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

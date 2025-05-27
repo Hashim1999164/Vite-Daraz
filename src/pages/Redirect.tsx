@@ -1,34 +1,35 @@
-// src/pages/Redirect.tsx
-import { useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { decodeUrl, isValidDarazUrl } from '../utils/encode'
-import PreviewCard from '../components/PreviewCard'
+import { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { decodeUrl, isValidDarazUrl } from '../utils/encode';
+import PreviewCard from '../components/PreviewCard';
 
-export default function Redirect() {
-  const { encodedUrl } = useParams<{ encodedUrl: string }>()
-  const navigate = useNavigate()
+const Redirect = () => {
+  const { encodedUrl } = useParams<{ encodedUrl: string }>();
+  const navigate = useNavigate();
   
   useEffect(() => {
     if (!encodedUrl) {
-      navigate('/error')
-      return
+      navigate('/error');
+      return;
     }
     
     try {
-      const originalUrl = decodeUrl(encodedUrl)
+      const originalUrl = decodeUrl(encodedUrl);
       if (!isValidDarazUrl(originalUrl)) {
-        navigate('/error')
+        navigate('/error');
       }
     } catch (error) {
-      navigate('/error')
+      navigate('/error');
     }
-  }, [encodedUrl, navigate])
+  }, [encodedUrl, navigate]);
   
-  if (!encodedUrl) return null
+  if (!encodedUrl) return null;
   
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-purple-50 to-blue-50">
       <PreviewCard encodedUrl={encodedUrl} />
     </div>
-  )
-}
+  );
+};
+
+export default Redirect;
