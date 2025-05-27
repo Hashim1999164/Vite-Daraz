@@ -13,6 +13,9 @@ module.exports = {
         backgroundImage: {
           'gradient-purple': 'linear-gradient(135deg, #5A31F4 0%, #A66EFE 100%)',
         },
+        animation: {
+            'bounce-slow': 'bounce 2s infinite',
+        },
       },
     },
     plugins: [],

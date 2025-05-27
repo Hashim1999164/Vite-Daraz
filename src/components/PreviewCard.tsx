@@ -4,6 +4,12 @@ import { decodeUrl } from '../utils/encode';
 import { detectPlatform, isSafariOnIOS } from '../utils/detectPlatform';
 import { useNavigate } from 'react-router-dom';
 
+// Util to detect TikTok in-app browser
+const isTikTokBrowser = () => {
+  const ua = navigator.userAgent || navigator.vendor;
+  return ua.toLowerCase().includes('tiktok');
+};
+
 const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
   const [ogData, setOgData] = useState<{
     title?: string;
@@ -19,30 +25,45 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
   const navigate = useNavigate();
   const originalUrl = decodeUrl(encodedUrl);
 
+  const isTikTok = isTikTokBrowser();
+
   useEffect(() => {
+    // If NOT TikTok browser, force external open
+    if (!isTikTok) {
+      // Delay to allow React to mount cleanly
+      setTimeout(() => {
+        window.location.href = originalUrl;
+      }, 500);
+      return;
+    }
+
     const fetchOG = async () => {
       try {
         const response = await fetch(`/api/fetch-og?url=${encodeURIComponent(originalUrl)}`);
         const data = await response.json();
         setOgData(data);
       } catch {
-        setLoading(false);
+        setError('Failed to fetch preview data.');
       } finally {
-        
+        setLoading(false);
       }
     };
 
     fetchOG();
-  }, [originalUrl]);
+  }, [originalUrl, isTikTok]);
 
   useEffect(() => {
-    if (platform === 'android') {
+    if (platform === 'android' && isTikTok) {
       const interval = setInterval(() => {
         setAndroidMsgIndex(prev => (prev + 1) % 2);
       }, 2000);
       return () => clearInterval(interval);
     }
-  }, [platform]);
+  }, [platform, isTikTok]);
+
+  if (!isTikTok) {
+    return null; // Prevent rendering anything if redirecting
+  }
 
   return (
     <motion.div 
@@ -52,32 +73,42 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
       className="relative w-full max-w-md bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-gray-100"
     >
       {/* Android Top Message */}
-      {platform === 'android' && (
-        <motion.div
-        className="absolute top-0 left-1/2 transform -translate-x-1/2 px-4 py-3 bg-yellow-100 border border-yellow-300 rounded-b-xl text-yellow-900 text-center font-semibold text-sm z-20 w-fit max-w-[90%] shadow-md"
-        initial={{ y: -50 }}
+      {platform === 'android' && isTikTok && (
+      <motion.div
+        className="fixed top-0 left-0 right-0 w-full z-50 flex flex-col items-center bg-white py-4 shadow-md"
+        initial={{ y: -60 }}
         animate={{ y: 0 }}
+        transition={{ duration: 0.4 }}
       >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={androidMsgIndex}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              {androidMsgIndex === 0
-                ? '📲 Tap ⋮ in the top-right corner'
-                : 'Then tap "Open in browser" to continue'}
-            </motion.div>
-          </AnimatePresence>
-          <div className="absolute top-2 right-2 flex flex-col items-center z-30">
-          <div className="text-xl">⋮</div>
-          <div className="w-3 h-3 mt-1 rotate-45 border-t-2 border-r-2 border-yellow-700" />
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={androidMsgIndex}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-sm font-semibold text-gray-800"
+          >
+            {androidMsgIndex === 0
+              ? 'Tap ⋮ in the top-right corner'
+              : 'Then tap "Open in browser" to continue'}
+          </motion.div>
+        </AnimatePresence>
 
-        </motion.div>
-      )}
+        <div className="mt-1 animate-bounce-slow text-orange-500">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-6 h-6 rotate-180"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7-7-7 7" />
+          </svg>
+        </div>
+      </motion.div>
+    )}
+
 
       <div className={`p-6 ${platform === 'android' ? 'pt-20' : ''}`}>
         {loading ? (
