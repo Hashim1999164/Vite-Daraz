@@ -9,12 +9,7 @@ const isTikTokBrowser = (): boolean => {
   const isAndroid = /android/i.test(ua);
   const isIOS = /iphone|ipad|ipod/i.test(ua);
 
-  // 1. First exclude regular browsers definitively
-  const isRegularChrome = ua.includes('chrome') && !ua.includes('; wv)');
-  const isRegularSafari = ua.includes('safari') && !ua.includes('mobile/15e148');
-  if (isRegularChrome || isRegularSafari) return false;
-
-  // 2. TikTok-specific direct identifiers
+  // 1. Direct TikTok identifiers (works for both platforms)
   const tiktokIdentifiers = [
     'tiktok', 'musically', 'trill', 'aweme',
     'ss.android.ugc', 'zhiliaoapp', 'snssdk1233',
@@ -25,44 +20,71 @@ const isTikTokBrowser = (): boolean => {
     return true;
   }
 
-  // 3. Check for TikTok-injected objects
+  // 2. Check for TikTok-injected objects (most reliable)
   if ((window as any).__tiktok !== undefined || 
-      (navigator as any).tiktok !== undefined) {
+      (navigator as any).tiktok !== undefined ||
+      (window as any).bytebridge !== undefined) {
     return true;
   }
 
-  // 4. Platform-specific advanced detection
+  // 3. Android-specific detection
   if (isAndroid) {
-    // Android WebView with TikTok characteristics
+    // TikTok's Android WebView has these exact characteristics:
     const isTikTokWebView = (
-      ua.includes('; wv)') && // Must have WebView marker
+      ua.includes('; wv)') && // WebView marker
+      ua.includes('linux') && // Android
+      ua.includes('applewebkit') && // WebKit
       !ua.includes('chrome/') && // Not Chrome
-      (ua.includes('linux') && ua.includes('applewebkit')) && // Android WebKit
-      (navigator.plugins.length === 0) // No plugins
+      !ua.includes('firefox') && // Not Firefox
+      !ua.includes('samsung') && // Not Samsung browser
+      (ua.includes('mobile') || ua.includes('mobi')) // Mobile device
     );
 
-    return isTikTokWebView;
+    if (isTikTokWebView) {
+      // Additional verification for TikTok
+      try {
+        if (navigator.plugins.length === 0 && 
+            navigator.mimeTypes.length === 0 &&
+            (window.outerWidth === 0 || window.outerHeight === 0)) {
+          return true;
+        }
+      } catch (e) {
+        return true; // Cross-origin restrictions often indicate TikTok
+      }
+    }
   }
+
+  // 4. iOS-specific detection
   else if (isIOS) {
-    // iOS WebView with TikTok characteristics
+    // TikTok's iOS WebView has these characteristics:
     const isTikTokWebView = (
-      ua.includes('mobile/15e148') || // iOS WebKit
-      (ua.includes('applewebkit') && !ua.includes('version/')) // No version
+      ua.includes('mobile/15e148') || // Specific WebKit version
+      (ua.includes('applewebkit') && !ua.includes('safari/'))
     );
 
-    return isTikTokWebView;
+    if (isTikTokWebView) {
+      try {
+        if (window.screen.width === 0 && window.screen.height === 0) {
+          return true;
+        }
+      } catch (e) {
+        return true; // API restrictions indicate TikTok
+      }
+    }
   }
 
-  // 5. Final iframe/referrer check (only if other checks are inconclusive)
+  // 5. Iframe/referrer check (last resort)
   try {
     if (window.self !== window.top) {
       const frameUrl = (document.referrer || '').toLowerCase();
-      return frameUrl.includes('tiktok.com') || 
-             frameUrl.includes('tiktokcdn.com');
+      if (frameUrl.includes('tiktok.com') || 
+          frameUrl.includes('tiktokcdn.com') ||
+          frameUrl.includes('bytecdn.cn')) {
+        return true;
+      }
     }
   } catch (e) {
-    // Cross-origin iframe
-    return true;
+    return true; // Cross-origin iframe likely means TikTok
   }
 
   return false;
