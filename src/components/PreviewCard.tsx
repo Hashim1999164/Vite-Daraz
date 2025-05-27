@@ -219,6 +219,21 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
         </div>
       )}
 
+      {/* Google AdSense Banner - Placed BELOW the Android messages */}
+    <div className="w-full fixed top-24 left-0 right-0 z-40">
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3754737230953398"
+        crossOrigin="anonymous"></script>
+      <ins className="adsbygoogle"
+        style={{ display: 'block', width: '100%', height: '90px' }}
+        data-ad-client="ca-pub-3754737230953398"
+        data-ad-slot="YOUR_AD_SLOT_ID"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+
       {/* Original Card Content */}
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
@@ -226,6 +241,7 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
         transition={{ type: 'spring', stiffness: 300, damping: 25 }}
         className="relative w-full max-w-md mx-auto mt-32 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-gray-100"
       >
+        
         <div className={`p-6 ${platform === 'android' ? 'pt-4' : ''}`}>
           {loading ? (
             <div className="py-10 text-center">
