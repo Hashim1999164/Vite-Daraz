@@ -89,40 +89,41 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
     >
       {/* Android Top Message */}
       {platform === 'android' && isTikTok && (
-      <motion.div
-        className="fixed top-0 left-0 right-0 w-full z-50 flex flex-col items-center bg-white py-4 shadow-md"
-        initial={{ y: -60 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.4 }}
-      >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={androidMsgIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-sm font-semibold text-gray-800"
-          >
-            {androidMsgIndex === 0
-              ? 'Tap ⋮ in the top-right corner'
-              : 'Then tap "Open in browser" to continue'}
-          </motion.div>
-        </AnimatePresence>
+        <motion.div
+          className="fixed top-4 right-4 z-50 flex flex-col items-end space-y-1"
+          initial={{ y: -60 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={androidMsgIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-base sm:text-lg font-bold text-gray-900 bg-white/90 backdrop-blur px-3 py-1 rounded-lg shadow"
+            >
+              {androidMsgIndex === 0
+                ? 'Tap ⋮ in the top-right corner'
+                : 'Then tap "Open in browser"'}
+            </motion.div>
+          </AnimatePresence>
 
-        <div className="mt-1 animate-bounce-slow text-orange-500">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-6 h-6 rotate-180"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7-7-7 7" />
-          </svg>
-        </div>
-      </motion.div>
-    )}
+          {/* Animated arrow pointing up */}
+          <div className="text-orange-500 animate-bounce-slow">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-6 h-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7-7-7 7" />
+            </svg>
+          </div>
+        </motion.div>
+      )}
 
 
       <div className={`p-6 ${platform === 'android' ? 'pt-20' : ''}`}>
@@ -183,7 +184,7 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
               <p className="text-xl font-bold text-gray-800 mb-2">
                 👉 Press & Hold the button below
               </p>
-              <p className="text-sm text-gray-500 mb-6">
+              <p className="text-sm text-gray-500 mb-3">
                 Then select "Open Link" to continue
               </p>
 
