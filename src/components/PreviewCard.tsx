@@ -100,10 +100,6 @@ const isTikTokBrowser = (): boolean => {
 
   // 5. Check for TikTok-specific behavior
   try {
-    // TikTok often blocks certain APIs
-    if (typeof window.DeviceOrientationEvent === 'undefined') {
-      return true;
-    }
     
     // TikTok sometimes modifies touch events
     if ('ontouchstart' in window && (window as any).TouchEvent.toString().includes('[native code]')) {
