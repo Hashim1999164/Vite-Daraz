@@ -25,7 +25,7 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
   const navigate = useNavigate();
   const originalUrl = decodeUrl(encodedUrl);
 
-  const isTikTok = isTikTokBrowser();
+  const isTikTok = true //isTikTokBrowser();
 
   useEffect(() => {
     // If NOT TikTok browser, force external open
