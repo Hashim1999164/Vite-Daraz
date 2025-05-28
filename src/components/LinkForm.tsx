@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { encodeUrl, isValidDarazUrl } from '../utils/encode';
+import { encodeUrl, isValidWebsiteUrl } from '../utils/encode';
 import { toast } from 'react-hot-toast';
 
 const LinkForm = ({ onSuccess }: { onSuccess: (shortUrl: string) => void }) => {
@@ -10,7 +10,7 @@ const LinkForm = ({ onSuccess }: { onSuccess: (shortUrl: string) => void }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setIsValid(isValidDarazUrl(url));
+    setIsValid(isValidWebsiteUrl(url));
   }, [url]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -100,7 +100,7 @@ const LinkForm = ({ onSuccess }: { onSuccess: (shortUrl: string) => void }) => {
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://s.daraz.pk/s.0xZr0"
+              placeholder="https://www.yourwebsite.com/"
               className="w-full px-5 py-4 bg-white/95 text-gray-800 placeholder-gray-400 focus:outline-none text-sm font-medium border-0 shadow-sm"
               required
             />
@@ -116,7 +116,7 @@ const LinkForm = ({ onSuccess }: { onSuccess: (shortUrl: string) => void }) => {
                 exit={{ opacity: 0, y: -10 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 px-3 py-1.5 bg-purple-100 text-purple-600 rounded-lg text-xs font-semibold shadow-sm"
+                className="absolute right-3 top-2 transform -translate-y-1/2 px-3 py-1.5 bg-purple-100 text-purple-600 rounded-lg text-xs font-semibold shadow-sm"
               >
                 Paste
               </motion.button>
@@ -137,7 +137,7 @@ const LinkForm = ({ onSuccess }: { onSuccess: (shortUrl: string) => void }) => {
                 <svg className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p className="ml-2 text-xs text-red-600">Please enter a valid Daraz product URL</p>
+                <p className="ml-2 text-xs text-red-600">Please enter a valid URL</p>
               </div>
             </motion.div>
           )}

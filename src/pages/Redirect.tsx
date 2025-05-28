@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { decodeUrl, isValidDarazUrl } from '../utils/encode';
+import { decodeUrl, isValidWebsiteUrl } from '../utils/encode';
 import PreviewCard from '../components/PreviewCard';
 
 const Redirect = () => {
@@ -15,7 +15,7 @@ const Redirect = () => {
     
     try {
       const originalUrl = decodeUrl(encodedUrl);
-      if (!isValidDarazUrl(originalUrl)) {
+      if (!isValidWebsiteUrl(originalUrl)) {
         navigate('/error');
       }
     } catch (error) {
