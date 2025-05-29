@@ -189,6 +189,16 @@ const LinkForm = ({ onSuccess }: { onSuccess: (shortUrl: string) => void }) => {
             )}
           </span>
         </motion.button>
+        <div className="mt-3 text-xs text-gray-500 text-center">
+          By creating a link, you accept our
+          <button
+            type="button"
+            onClick={() => window.location.href = '/terms'}
+            className="ml-1 text-purple-600 hover:underline font-semibold"
+          >
+            Terms and Conditions
+          </button>
+        </div>
       </form>
     </div>
   );
