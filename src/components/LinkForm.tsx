@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { encodeUrl, isValidWebsiteUrl } from '../utils/encode';
 import { toast } from 'react-hot-toast';
+import AdSenseBanner from './AdSenseBanner';
 
 const LinkForm = ({ onSuccess }: { onSuccess: (shortUrl: string) => void }) => {
   const [url, setUrl] = useState('');
@@ -69,19 +70,9 @@ const LinkForm = ({ onSuccess }: { onSuccess: (shortUrl: string) => void }) => {
   return (
     <div className="w-full max-w-md">
       {/* Google AdSense Horizontal Banner */}
-      <div className="w-full mb-6 overflow-hidden rounded-lg">
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3754737230953398"
-          crossOrigin="anonymous"></script>
-        <ins className="adsbygoogle"
-          style={{ display: 'block', width: '100%', height: '90px' }}
-          data-ad-client="ca-pub-3754737230953398"
-          data-ad-slot="YOUR_AD_SLOT_ID"
-          data-ad-format="auto"
-          data-full-width-responsive="true"></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-      </div>
+      <div className="w-full flex justify-center mt-0">
+                    <AdSenseBanner style={{ width: '100%', height: '90px' }} />
+                  </div>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="relative">
           <motion.div
