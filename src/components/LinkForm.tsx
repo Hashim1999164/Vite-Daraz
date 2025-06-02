@@ -70,9 +70,8 @@ const LinkForm = ({ onSuccess }: { onSuccess: (shortUrl: string) => void }) => {
   return (
     <div className="w-full max-w-md">
       {/* Google AdSense Horizontal Banner */}
-      <div className="w-full flex justify-center mt-0">
-                    <AdSenseBanner adSlot="YOUR_AD_SLOT_ID" style={{ width: '90%', height: 20 }} />
-                  </div>
+                    <AdSenseBanner adSlot="YOUR_AD_SLOT_ID" style={{ width: '90%', height: 30 }} />
+                  
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="relative">
           <motion.div
