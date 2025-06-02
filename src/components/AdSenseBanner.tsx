@@ -25,7 +25,7 @@ const AdSenseBanner: React.FC<AdSenseBannerProps> = ({ adSlot, style }) => {
     <div style={{ width: '100%', display: 'flex', justifyContent: 'center', ...style }}>
       <ins
         className="adsbygoogle"
-        style={{ display: 'block', ...style }}
+        style={{ display: 'block', height: '60px', ...style }}
         data-ad-client={AD_CLIENT}
         data-ad-slot={adSlot}
         data-ad-format="auto"
