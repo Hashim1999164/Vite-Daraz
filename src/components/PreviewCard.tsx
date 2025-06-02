@@ -5,6 +5,7 @@ import { detectPlatform, isSafariOnIOS } from '../utils/detectPlatform';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
+import AdSenseBanner from './AdSenseBanner';
 
 const isTikTokBrowser = (): boolean => {
   const ua = navigator.userAgent.toLowerCase();
@@ -95,7 +96,7 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
   const [error, setError] = useState<string | null>(null);
   const [androidMsgIndex, setAndroidMsgIndex] = useState(0);
 
-  const platform = detectPlatform();
+  const platform = 'ios';//detectPlatform();
   const navigate = useNavigate();
   const originalUrl = decodeUrl(encodedUrl);
 
@@ -155,7 +156,10 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50 to-blue-50">
-      <Header />
+                        <div className="w-full flex justify-center mt-0">
+                    <AdSenseBanner adSlot="YOUR_BOTTOM_AD_SLOT_ID" style={{ width: '100%', height: 90 }} />
+                  </div>
+
       <main className="flex-grow flex flex-col items-center justify-center">
         <div className="relative w-full h-full">
           {/* Android Top Message - Outside the card */}
@@ -302,22 +306,12 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
                       <RedirectToDaraz originalUrl={originalUrl} />
                     </div>
                   )}
-                  {/* Google AdSense Banner - At the bottom inside the card */}
-                  <div className="w-full flex justify-center mt-8">
-                    <div>
-                      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3754737230953398"
-                        crossOrigin="anonymous"></script>
-                      <ins className="adsbygoogle"
-                        style={{ display: 'block', width: '100%', height: '90px' }}
-                        data-ad-client="ca-pub-3754737230953398"
-                        data-ad-slot="YOUR_AD_SLOT_ID"
-                        data-ad-format="auto"
-                        data-full-width-responsive="true"></ins>
-                      <script>
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                      </script>
-                    </div>
-                  </div>
+                  <p className="mt-5 text-l font-bold text-gray-800 mb-2">
+                        Simplifying your shopping experience
+                      </p>
+                      <p className="text-sm text-gray-500 mb-3">
+                        We are working on a better experience for you
+                      </p>
                 </>
               )}
             </div>
@@ -327,8 +321,11 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
         
       </main>
       
-      <Footer />
+      <div className="w-full flex justify-center mt-0">
+                    <AdSenseBanner adSlot="YOUR_BOTTOM_AD_SLOT_ID" style={{ width: '100%', height: 90 }} />
+                  </div>
     </div>
+    
   );
 };
 
