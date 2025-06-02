@@ -277,35 +277,19 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
               ) : (
                 <>
                   <div className="flex flex-col items-center">
-                    {ogData?.image && (
-                      <div className="w-full h-56 bg-white rounded-xl overflow-hidden shadow-md mb-5">
-                        <img 
-                          src={ogData.image} 
-                          alt={ogData.title || 'Product image'}
-                          className="w-full h-full object-contain"
-                        />
-                      </div>
-                    )}
+                    
                     <h2 className="text-xl font-bold text-gray-800 text-center">
                       {ogData?.title || originalUrl}
                     </h2>
                     <div className="w-full flex justify-center my-6">
-                      <img src="/exit.png" alt="Exit" className="w-80 h-80 object-contain" />
+                      <img src="/exit.png" alt="Exit" className="w-20 h-20 object-contain" />
                     </div>
-                    {ogData?.price && (
-                      <p className="mt-3 px-4 py-2 bg-purple-100 text-purple-700 font-bold rounded-full">
-                        {ogData.price}
-                      </p>
-                    )}
-                    <p className="mt-3 text-gray-600 text-center">
-                      {ogData?.description || ''}
-                    </p>
                   </div>
 
                   {/* iOS Safari */}
                   {platform === 'ios' && (
                     <div className="mt-10 text-center flex flex-col items-center">
-                      <p className="text-xl font-bold text-gray-800 mb-2">
+                      <p className="text-l font-bold text-gray-800 mb-2">
                         👉 Press & Hold the button below
                       </p>
                       <p className="text-sm text-gray-500 mb-3">
