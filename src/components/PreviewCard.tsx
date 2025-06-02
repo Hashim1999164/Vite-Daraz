@@ -156,11 +156,6 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50 to-blue-50">
-      {platform === 'ios' && isTikTok && (
-        <div className="w-full flex justify-center mt-0">
-          <AdSenseBanner adSlot="YOUR_AD_SLOT_ID" style={{ width: '100%', height: 30 }} />
-        </div>
-      )}
       
       <main className="flex-grow flex flex-col items-center justify-center">
         <div className="relative w-full h-full">
