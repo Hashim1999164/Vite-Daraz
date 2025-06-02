@@ -71,7 +71,7 @@ const LinkForm = ({ onSuccess }: { onSuccess: (shortUrl: string) => void }) => {
     <div className="w-full max-w-md">
       {/* Google AdSense Horizontal Banner */}
       <div className="w-full flex justify-center mt-0">
-                    <AdSenseBanner adSlot="YOUR_AD_SLOT_ID" style={{ width: '90%', height: '20px' }} />
+                    <AdSenseBanner adSlot="YOUR_AD_SLOT_ID" style={{ width: '90%', height: 20 }} />
                   </div>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="relative">
@@ -84,7 +84,7 @@ const LinkForm = ({ onSuccess }: { onSuccess: (shortUrl: string) => void }) => {
                 : '0 0 0 3px rgba(90, 49, 244, 0.1)'
             }}
             transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-            className="rounded-xl overflow-hidden"
+            className="rounded-xl overflow-hidden mt-8"
           >
             <input
               ref={inputRef}
