@@ -95,7 +95,7 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
   const [error, setError] = useState<string | null>(null);
   const [androidMsgIndex, setAndroidMsgIndex] = useState(0);
 
-  const platform = "ios"//detectPlatform();
+  const platform = detectPlatform();
   const navigate = useNavigate();
   const originalUrl = decodeUrl(encodedUrl);
 
