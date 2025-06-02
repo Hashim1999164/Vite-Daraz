@@ -156,6 +156,22 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50 to-blue-50">
       <Header />
+      {/* AdSense Banner - Centered between Header and Card */}
+      <div className="w-full flex justify-center my-8">
+        <div>
+          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3754737230953398"
+            crossOrigin="anonymous"></script>
+          <ins className="adsbygoogle"
+            style={{ display: 'block', width: '400px', height: '90px' }}
+            data-ad-client="ca-pub-3754737230953398"
+            data-ad-slot="YOUR_AD_SLOT_ID"
+            data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
+      </div>
       <main className="flex-grow flex flex-col items-center justify-center">
         <div className="relative w-full h-full">
           {/* Android Top Message - Outside the card */}
@@ -223,21 +239,6 @@ const PreviewCard = ({ encodedUrl }: { encodedUrl: string }) => {
               </div>
             </div>
           )}
-
-          {/* Google AdSense Banner - Placed BELOW the Android messages */}
-          <div className="w-full fixed top-24 left-0 right-0 z-40">
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3754737230953398"
-              crossOrigin="anonymous"></script>
-            <ins className="adsbygoogle"
-              style={{ display: 'block', width: '100%', height: '90px' }}
-              data-ad-client="ca-pub-3754737230953398"
-              data-ad-slot="YOUR_AD_SLOT_ID"
-              data-ad-format="auto"
-              data-full-width-responsive="true"></ins>
-            <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-          </div>
 
           {/* Original Card Content */}
           <motion.div 
