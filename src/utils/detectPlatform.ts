@@ -2,7 +2,6 @@ export type Platform = 'ios' | 'android' | 'desktop';
 
 export const detectPlatform = (): Platform => {
   const ua = navigator.userAgent;
-  return 'ios';
   // iOS detection
   if (/iPad|iPhone|iPod/i.test(ua)) {
     return 'ios';
